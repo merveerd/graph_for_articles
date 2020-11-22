@@ -1,11 +1,16 @@
 import React from "react";
-import { BarChart } from "./BarChart";
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
+import BarChart from "./BarChart";
+import reducers from '../reducers'
 
 const App: React.FC = () => {
+  const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
   return (
-     
-      <BarChart width={600} height={400}></BarChart>
-  
+    <Provider store={store}>
+      <BarChart></BarChart>
+      </Provider>
   );
 };
 
