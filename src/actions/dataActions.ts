@@ -19,14 +19,15 @@ export const setProcessedData = () => {
       minPY = item.PY;
     }
   });
-
+  let stringValue;
   articles.forEach((item) => {
     item.tokens.forEach((token) => {
-      if (!anagram[token.value]) {
-        anagram[token.value] = [];
+      stringValue = token.value.replace(/[\u200B-\u200D\uFEFF]/g, ''); //can be increased the ccontrol
+      if (!anagram[stringValue]) {
+        anagram[stringValue] = [];
       }
-      anagram[token.value][item.PY - minPY] =
-        anagram[token.value][item.PY - minPY] + 1 || 1;
+      anagram[stringValue][item.PY - minPY] =
+        anagram[stringValue][item.PY - minPY] + 1 || 1;
     });
   });
 
@@ -38,6 +39,7 @@ export const setProcessedData = () => {
     freq = anagram[key].reduce((year1, year2) => {
       return year1 + year2;
     }, 0);
+
     processedArray.push({
       name: key,
       frequency: freq,
