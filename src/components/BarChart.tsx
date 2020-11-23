@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { IRootState } from '../reducers';
 import {
