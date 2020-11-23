@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { IRootState } from '../reducers';
@@ -41,9 +42,7 @@ const BarChart: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    ('here');
     if (props.allNumericData.length === 0) {
-      console.log('numeric');
       props.getNumericData();
     }
   }, []);
@@ -128,19 +127,16 @@ const mapStateToProps = ({ data }: IRootState): StateProps => {
   return { allNumericData, allAlphabeticData, shownData, onLoadingData };
 };
 
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<IRootState, void, AnyAction>
-): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): DispatchProps => {
   return {
-    //toparla asagisini
-    getNumericData: async () => {
-      await dispatch(getNumericData());
+    getNumericData: () => {
+      dispatch(getNumericData());
     },
-    getAlphabeticData: async (allData) => {
-      await dispatch(getAlphabeticData(allData));
+    getAlphabeticData: (allData) => {
+      dispatch(getAlphabeticData(allData));
     },
-    getShownData: async (allData, orderDirection, quantity) => {
-      await dispatch(getShownData(allData, orderDirection, quantity));
+    getShownData: (allData, orderDirection, quantity) => {
+      dispatch(getShownData(allData, orderDirection, quantity));
     },
   };
 };
