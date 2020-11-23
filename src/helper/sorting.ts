@@ -1,19 +1,21 @@
 import { subArticle } from '../models/models'
-
+import {types} from './stringTypes';
 export function MergeSort(items: Array<subArticle>, type: string): Array<subArticle> {
-    return divide(items, type);
+
+   if(type === types.numeric)  return divideForNumeric(items);
+   return divideForAlphabetic(items)
 }
 
-function divide(items: Array<subArticle>, type: string): Array<subArticle> {
+function divideForNumeric(items: Array<subArticle>) {
     var halfLength = Math.ceil(items.length / 2);
     var low = items.slice(0, halfLength);
     var high = items.slice(halfLength);
     if (halfLength > 1) {
-        low = divide(low, type);
-        high = divide(high, type);
+        low = divideForNumeric(low);
+        high = divideForNumeric(high);
     }
     return combineNumerically(low, high);
-    //  return combineAlphabetically(low, high)
+    
 }
 function combineNumerically(low: Array<subArticle>, high: Array<subArticle>): Array<subArticle> {
     var indexLow = 0;
@@ -47,6 +49,17 @@ function combineNumerically(low: Array<subArticle>, high: Array<subArticle>): Ar
     return combined;
 }
 
+function divideForAlphabetic(items: Array<subArticle>) {
+    var halfLength = Math.ceil(items.length / 2);
+    var low = items.slice(0, halfLength);
+    var high = items.slice(halfLength);
+    if (halfLength > 1) {
+        low = divideForAlphabetic(low);
+        high = divideForAlphabetic(high);
+    }
+    return combineAlphabetically(low, high);
+    
+}
 function combineAlphabetically(low: Array<subArticle>, high: Array<subArticle>): Array<subArticle> {
     var indexLow = 0;
     var indexHigh = 0;
@@ -61,7 +74,7 @@ function combineAlphabetically(low: Array<subArticle>, high: Array<subArticle>):
                 combined.push(lowItem);
                 indexLow++;
             } else {
-                if (lowItem.frequency >= highItem.frequency) {
+                if (lowItem.name <= highItem.name) {
                     combined.push(lowItem);
                     indexLow++;
                 } else {

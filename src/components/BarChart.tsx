@@ -3,15 +3,27 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { IRootState } from '../reducers';
-import { getNumericData } from '../actions/dataActions';
+import {
+  getNumericData,
+  getAlphabeticData,
+  getShownData,
+} from '../actions/dataActions';
 import { subArticle } from '../models/models';
 import { styles } from '../styles/styles';
 import Inputs from './Inputs';
+
 import { types } from '../helper/stringTypes';
 import { draw } from '../helper/draw';
+import { cpuUsage } from 'process';
 
 interface DispatchProps {
   getNumericData: () => void;
+  getShownData: (
+    data: Array<subArticle>,
+    orderDirection: string,
+    quantity: number
+  ) => void;
+  getAlphabeticData: (allData: Array<subArticle>) => void;
 }
 interface StateProps {
   allNumericData: Array<subArticle>;
@@ -22,32 +34,34 @@ interface StateProps {
 
 const BarChart: React.FC<Props> = (props) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [shownData, setShownData] = useState<Array<subArticle>>([]);
   const [quantity, setQuantity] = React.useState<number>(50);
+  const [orderType, setOrderType] = React.useState<string>(types.numeric);
   const [orderDirection, setOrderDirection] = React.useState<string>(
     types.ascending
   );
 
-  const handleQuantity = (event: any) => {
-    setQuantity(event.target.value);
-  };
-
   useEffect(() => {
+    ('here');
     if (props.allNumericData.length === 0) {
+      console.log('numeric');
       props.getNumericData();
     }
   }, []);
 
   useEffect(() => {
-    setShownData(props.allNumericData.slice(0, quantity));
+    props.getShownData(props.allNumericData, orderDirection, quantity);
   }, [props.allNumericData]);
 
   useEffect(() => {
-    if (shownData.length > 0) {
+    props.getShownData(props.allAlphabeticData, orderDirection, quantity);
+  }, [props.allAlphabeticData]);
+
+  useEffect(() => {
+    if (props.shownData.length > 0) {
       //first render is an empty array
-      draw(shownData, svgRef);
+      draw(props.shownData, svgRef);
     }
-  }, [shownData]);
+  }, [props.shownData]);
 
   useEffect(() => {
     let graphSvg = document.getElementById('graph_svg')!;
@@ -62,14 +76,30 @@ const BarChart: React.FC<Props> = (props) => {
         graphSvg.setAttribute('width', '3600');
         break;
     }
+  }, [quantity]);
 
-    orderDirection === types.ascending
-      ? setShownData(props.allNumericData.slice(0, quantity))
-      : setShownData(props.allNumericData.slice(-quantity));
-  }, [quantity, orderDirection]);
+  useEffect(() => {
+    if (
+      orderType === types.alphabetic &&
+      props.allAlphabeticData.length === 0 &&
+      props.allNumericData.length > 0
+    ) {
+      props.getAlphabeticData(props.allNumericData);
+      return;
+    }
 
-  const changeOrder = (event: any) => {
+    orderType === types.numeric
+      ? props.getShownData(props.allNumericData, orderDirection, quantity)
+      : props.getShownData(props.allAlphabeticData, orderDirection, quantity);
+  }, [quantity, orderDirection, orderType]);
+  const changeQuantity = (event: any) => {
+    setQuantity(event.target.value);
+  };
+  const changeOrderDirection = (event: any) => {
     setOrderDirection(event.target.value);
+  };
+  const changeOrderType = (event: any) => {
+    setOrderType(event.target.value);
   };
 
   return (
@@ -77,8 +107,10 @@ const BarChart: React.FC<Props> = (props) => {
       <Inputs
         quantityValue={quantity}
         order={orderDirection}
-        handleQuantity={handleQuantity}
-        changeOrder={changeOrder}
+        handleQuantity={changeQuantity}
+        changeOrderDirection={changeOrderDirection}
+        orderTypeValue={orderType}
+        changeOrderType={changeOrderType}
       ></Inputs>
       <svg
         ref={svgRef}
@@ -104,9 +136,19 @@ const mapDispatchToProps = (
     getNumericData: async () => {
       await dispatch(getNumericData());
     },
+    getAlphabeticData: async (allData) => {
+      await dispatch(getAlphabeticData(allData));
+    },
+    getShownData: async (allData, orderDirection, quantity) => {
+      await dispatch(getShownData(allData, orderDirection, quantity));
+    },
   };
 };
-export default connect(mapStateToProps, { getNumericData })(BarChart);
+export default connect(mapStateToProps, {
+  getNumericData,
+  getAlphabeticData,
+  getShownData,
+})(BarChart);
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;

@@ -1,10 +1,10 @@
 import React from 'react';
-
 import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { types } from '../helper/stringTypes';
 //can be seperated these two inputs
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -12,25 +12,22 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
   },
 }));
-//tekille types i
-const types = {
-  ascending: 'Ascending',
-  descending: 'Descending',
-  numeric: 'numeric',
-  alphabetic: 'alphabetic',
-};
 
 interface InputProps {
   quantityValue: number;
   handleQuantity: (event: any) => void;
-  changeOrder: (event: any) => void;
+  changeOrderDirection: (event: any) => void;
   order: string;
+  changeOrderType: (event: any) => void;
+  orderTypeValue: string;
 }
 const Inputs = ({
   quantityValue,
   handleQuantity,
-  changeOrder,
+  changeOrderDirection,
   order,
+  changeOrderType,
+  orderTypeValue,
 }: InputProps) => {
   const classes = useStyles();
   return (
@@ -45,7 +42,7 @@ const Inputs = ({
       }}
     >
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">quantity</InputLabel>
+        <InputLabel id="demo-simple-select-label">Quantity</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -58,15 +55,27 @@ const Inputs = ({
         </Select>
       </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Change Order</InputLabel>
+        <InputLabel id="demo-simple-select-label">Order By</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={order}
-          onChange={changeOrder}
+          onChange={changeOrderDirection}
         >
           <MenuItem value={types.ascending}>Ascending</MenuItem>
           <MenuItem value={types.descending}>Descending</MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Order Type</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={orderTypeValue}
+          onChange={changeOrderType}
+        >
+          <MenuItem value={types.numeric}>Numeric</MenuItem>
+          <MenuItem value={types.alphabetic}>Alphabetic</MenuItem>
         </Select>
       </FormControl>
     </div>
