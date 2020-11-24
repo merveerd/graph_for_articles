@@ -1,9 +1,9 @@
 import {
-  DATA_LOADING_START,
   NUMERIC_DATA_LOADING_SUCCESS,
   ALPHABETIC_DATA_LOADING_SUCCESS,
-  SHOWN_DATA_LOADING_SUCCESS,
-  dataActionsTypes,
+  QUANTITY_CHANGE,
+  ORDER_TYPE_CHANGE,
+  ORDER_DIRECTION_CHANGE,
 } from './stateTypes';
 import { subArticle, anagramData } from '../models/models';
 import { articles } from '../articles';
@@ -62,23 +62,23 @@ export const getNumericData = () => {
   };
 };
 
-export const getAlphabeticData = (data: Array<subArticle>) => {
-  //props.allNumericData if it is there otherwise
+export const setQuantity = (quantity: number) => {
   return {
-    type: ALPHABETIC_DATA_LOADING_SUCCESS,
-    payload: MergeSort(data, types.alphabetic),
+    type: QUANTITY_CHANGE,
+    payload: quantity,
   };
 };
 
-export const getShownData = (
-  data: Array<subArticle>,
-  orderDirection: string,
-  quantity: number
-) => {
-  let shown =
-    orderDirection === types.ascending
-      ? data.slice(0, quantity)
-      : data.slice(-quantity).reverse(); //as the shown data sample is max 100, didnt concerned about the runtime complexity
+export const setOrderType = (orderType: string) => {
+  return {
+    type: ORDER_TYPE_CHANGE,
+    payload: orderType,
+  };
+};
 
-  return { type: SHOWN_DATA_LOADING_SUCCESS, payload: shown };
+export const setOrderDirection = (orderDirection: string) => {
+  return {
+    type: ORDER_DIRECTION_CHANGE,
+    payload: orderDirection,
+  };
 };

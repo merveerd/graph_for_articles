@@ -4,7 +4,11 @@ export function MergeSort(
   items: Array<subArticle>,
   type: string
 ): Array<subArticle> {
-  if (type === types.numeric) return divideForNumeric(items);
+  if (type === types.numeric) {
+    console.log('numeric sort');
+    return divideForNumeric(items);
+  }
+  console.log('alphabetic sort');
   return divideForAlphabetic(items);
 }
 
@@ -18,6 +22,7 @@ function divideForNumeric(items: Array<subArticle>) {
   }
   return combineNumerically(low, high);
 }
+
 function combineNumerically(
   low: Array<subArticle>,
   high: Array<subArticle>
@@ -80,13 +85,6 @@ function combineAlphabetically(
         combined.push(lowItem);
         indexLow++;
       } else {
-        if (Number(lowItem.name) == 1 || Number(highItem.name) == 1) {
-          //   console.log(
-          //     lowItem.name.toString(),
-          //     highItem.name.toString(),
-          //     lowItem.name.toString() <= highItem.name.toString()
-          //   );
-        }
         if (lowItem.name <= highItem.name) {
           combined.push(lowItem);
           indexLow++;

@@ -42,23 +42,29 @@ const Inputs = ({
       }}
     >
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Quantity</InputLabel>
+        <InputLabel id="quantity-label">Quantity</InputLabel>
         <Select
           labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          data-testid="quantity-select"
           value={quantityValue}
           onChange={handleQuantity}
         >
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={50}>50</MenuItem>
-          <MenuItem value={100}>100</MenuItem>
+          <MenuItem data-testid="quantity-option" key="1" value={10}>
+            10
+          </MenuItem>
+          <MenuItem data-testid="quantity-option" key="2" value={50}>
+            50
+          </MenuItem>
+          <MenuItem data-testid="quantity-option" key="3" value={100}>
+            100
+          </MenuItem>
         </Select>
       </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Order By</InputLabel>
+        <InputLabel id="order-by-label">Order By</InputLabel>
         <Select
           labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          id="order-by-select"
           value={order}
           onChange={changeOrderDirection}
         >
@@ -67,10 +73,10 @@ const Inputs = ({
         </Select>
       </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Order Type</InputLabel>
+        <InputLabel id="order-type-label">Order Type</InputLabel>
         <Select
           labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          id="order-type-select"
           value={orderTypeValue}
           onChange={changeOrderType}
         >

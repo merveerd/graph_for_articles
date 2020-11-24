@@ -1,11 +1,14 @@
+import { createSelector } from 'reselect';
 import {
-  DATA_LOADING_START,
   NUMERIC_DATA_LOADING_SUCCESS,
   ALPHABETIC_DATA_LOADING_SUCCESS,
-  SHOWN_DATA_LOADING_SUCCESS,
+  QUANTITY_CHANGE,
+  ORDER_TYPE_CHANGE,
+  ORDER_DIRECTION_CHANGE,
 } from '../actions/stateTypes';
-
+import { types } from '../helper/stringTypes';
 import { subArticle } from '../models/models';
+import { MergeSort } from '../helper/sorting';
 
 declare interface IAction {
   type: string;
@@ -13,47 +16,86 @@ declare interface IAction {
 }
 export interface InitState {
   allNumericData: Array<subArticle>;
-  allAlphabeticData: Array<subArticle>;
-  shownData: Array<subArticle>;
-  onLoadingData: boolean;
+  quantity: number;
+  orderDirection: string;
+  orderType: string;
 }
 
 const INITIAL_STATE = {
   allNumericData: [],
-  allAlphabeticData: [],
-  shownData: [],
-  onLoadingData: false,
+  quantity: 50,
+  orderDirection: types.ascending,
+  orderType: types.numeric,
 };
 
 export default (state = INITIAL_STATE, action: IAction): InitState => {
   switch (action.type) {
-    case DATA_LOADING_START:
-      return {
-        ...state,
-        onLoadingData: true,
-      };
-
     case NUMERIC_DATA_LOADING_SUCCESS:
       return {
         ...state,
-        onLoadingData: false,
         allNumericData: action.payload,
       };
 
-    case ALPHABETIC_DATA_LOADING_SUCCESS:
+    case QUANTITY_CHANGE:
       return {
         ...state,
-        onLoadingData: false,
-        allAlphabeticData: action.payload,
+        quantity: action.payload,
       };
-    case SHOWN_DATA_LOADING_SUCCESS:
+
+    case ORDER_TYPE_CHANGE:
       return {
         ...state,
-        onLoadingData: false,
-        shownData: action.payload,
+        orderType: action.payload,
+      };
+
+    case ORDER_DIRECTION_CHANGE:
+      return {
+        ...state,
+        orderDirection: action.payload,
       };
 
     default:
       return state;
   }
 };
+
+// Selectors
+
+const getQuantity = (state: InitState) => state.quantity;
+const getOrderType = (state: InitState) => {
+  return state.orderType;
+};
+const getOrderDirection = (state: InitState) => state.orderDirection;
+const getAllNumericData = (state: InitState) => state.allNumericData;
+
+export const getAlphabetic = createSelector(
+  [getAllNumericData, getOrderType],
+  (allNumericData, orderType) => {
+    if (orderType === types.alphabetic) {
+      return MergeSort(allNumericData, types.alphabetic);
+    }
+    return []; //to prevent returning undefined since slice method is used for chosendata
+  }
+);
+
+export const getShown = createSelector(
+  [
+    getQuantity,
+    getOrderType,
+    getOrderDirection,
+    getAllNumericData,
+    getAlphabetic,
+  ],
+  (quantity, orderType, orderDirection, allNumericData, alphabeticData) => {
+    let shown,
+      chosenData =
+        orderType === types.alphabetic ? alphabeticData : allNumericData;
+
+    shown =
+      orderDirection === types.ascending
+        ? chosenData.slice(0, quantity)
+        : chosenData.slice(-quantity).reverse();
+
+    return shown;
+  }
+);

@@ -1,65 +1,53 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { AnyAction } from 'redux';
+
 import { IRootState } from '../reducers';
 import {
   getNumericData,
-  getAlphabeticData,
-  getShownData,
+  setQuantity,
+  setOrderType,
+  setOrderDirection,
 } from '../actions/dataActions';
 import { subArticle } from '../models/models';
 import { styles } from '../styles/styles';
 import Inputs from './Inputs';
-
-import { types } from '../helper/stringTypes';
 import { draw } from '../helper/draw';
-import { cpuUsage } from 'process';
+import { getShown, getAlphabetic } from '../reducers/dataReducer';
+//import { cpuUsage } from 'process';
 
 interface DispatchProps {
   getNumericData: () => void;
-  getShownData: (
-    data: Array<subArticle>,
-    orderDirection: string,
-    quantity: number
-  ) => void;
-  getAlphabeticData: (allData: Array<subArticle>) => void;
+  setQuantity: (quantity: number) => void;
+  setOrderType: (orderType: string) => void;
+  setOrderDirection: (orderDirection: string) => void;
 }
 interface StateProps {
   allNumericData: Array<subArticle>;
   allAlphabeticData: Array<subArticle>;
   shownData: Array<subArticle>;
-  onLoadingData: boolean;
+  orderType: string;
+  orderDirection: string;
+  quantity: number;
 }
 
-const BarChart: React.FC<Props> = (props) => {
+export const BarChart: React.FC<Props> = (props) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [quantity, setQuantity] = React.useState<number>(50);
-  const [orderType, setOrderType] = React.useState<string>(types.numeric);
-  const [orderDirection, setOrderDirection] = React.useState<string>(
-    types.ascending
-  );
+  const {
+    allNumericData,
+    shownData,
+    quantity,
+    orderType,
+    orderDirection,
+  } = props;
 
   useEffect(() => {
-    if (props.allNumericData.length === 0) {
+    if (allNumericData.length === 0) {
+      //to prevent rendering twice
       props.getNumericData();
     }
   }, []);
-
-  useEffect(() => {
-    props.getShownData(props.allNumericData, orderDirection, quantity);
-  }, [props.allNumericData]);
-
-  useEffect(() => {
-    props.getShownData(props.allAlphabeticData, orderDirection, quantity);
-  }, [props.allAlphabeticData]);
-
-  useEffect(() => {
-    if (props.shownData.length > 0) {
-      //first render is an empty array
-      draw(props.shownData, svgRef);
-    }
-  }, [props.shownData]);
 
   useEffect(() => {
     let graphSvg = document.getElementById('graph_svg')!;
@@ -77,27 +65,20 @@ const BarChart: React.FC<Props> = (props) => {
   }, [quantity]);
 
   useEffect(() => {
-    if (
-      orderType === types.alphabetic &&
-      props.allAlphabeticData.length === 0 &&
-      props.allNumericData.length > 0
-    ) {
-      props.getAlphabeticData(props.allNumericData);
-      return;
+    if (shownData.length > 0) {
+      //first render is an empty array
+      draw(shownData, svgRef);
     }
+  }, [shownData]);
 
-    orderType === types.numeric
-      ? props.getShownData(props.allNumericData, orderDirection, quantity)
-      : props.getShownData(props.allAlphabeticData, orderDirection, quantity);
-  }, [quantity, orderDirection, orderType]);
   const changeQuantity = (event: any) => {
-    setQuantity(event.target.value);
+    props.setQuantity(event.target.value);
   };
   const changeOrderDirection = (event: any) => {
-    setOrderDirection(event.target.value);
+    props.setOrderDirection(event.target.value);
   };
   const changeOrderType = (event: any) => {
-    setOrderType(event.target.value);
+    props.setOrderType(event.target.value);
   };
 
   return (
@@ -122,8 +103,15 @@ const BarChart: React.FC<Props> = (props) => {
 };
 
 const mapStateToProps = ({ data }: IRootState): StateProps => {
-  const { allNumericData, allAlphabeticData, shownData, onLoadingData } = data;
-  return { allNumericData, allAlphabeticData, shownData, onLoadingData };
+  const { allNumericData, orderType, orderDirection, quantity } = data;
+  return {
+    allNumericData,
+    orderType,
+    orderDirection,
+    quantity,
+    allAlphabeticData: getAlphabetic(data),
+    shownData: getShown(data),
+  };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): DispatchProps => {
@@ -131,19 +119,18 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): DispatchProps => {
     getNumericData: () => {
       dispatch(getNumericData());
     },
-    getAlphabeticData: (allData) => {
-      dispatch(getAlphabeticData(allData));
+
+    setOrderDirection: (orderDirection) => {
+      dispatch(setOrderDirection(orderDirection));
     },
-    getShownData: (allData, orderDirection, quantity) => {
-      dispatch(getShownData(allData, orderDirection, quantity));
+    setQuantity: (quantity) => {
+      dispatch(setQuantity(quantity));
+    },
+
+    setOrderType: (orderType) => {
+      dispatch(setOrderType(orderType));
     },
   };
 };
-export default connect(mapStateToProps, {
-  getNumericData,
-  getAlphabeticData,
-  getShownData,
-})(BarChart);
-
-type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+type Props = StateProps & DispatchProps;
+export default connect(mapStateToProps, mapDispatchToProps)(BarChart);
