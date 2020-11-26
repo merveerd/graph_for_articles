@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyledFormControl } from '../styles/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import { InputLabel, MenuItem, Select } from '../helper/materialUIExporter';
 
 interface QuantityInputProps {
   quantityValue: number;
