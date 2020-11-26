@@ -61,10 +61,6 @@ export const draw = (
     })
     .selectAll('rect')
     .data(function (d) {
-      let x = keys.map(function (key) {
-        return { key: key, value: d[key] as number };
-      });
-
       return keys.map(function (key) {
         return { key: key, value: d[key] as number };
       });

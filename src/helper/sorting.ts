@@ -2,6 +2,7 @@ import { ArticleData } from '../models/models';
 import { types } from './stringTypes';
 export function MergeSort(items: ArticleData, type: string): ArticleData {
   if (type === types.numeric) {
+    //seperation of functions to not checking the type repeatedly.
     return divideForNumeric(items);
   }
   return divideForAlphabetic(items);

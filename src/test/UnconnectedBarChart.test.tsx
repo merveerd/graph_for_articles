@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen, fireEvent, cleanup } from '@testing-library/react';
-import ReactDOM from 'react-dom';
+const ReactDOM = require('react-dom');
 import { within } from '@testing-library/dom';
 import { UnconnectedBarChart } from '../components/BarChart';
 import { types } from '../helper/stringTypes';
