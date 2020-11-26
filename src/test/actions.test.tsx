@@ -1,16 +1,17 @@
 import {
   getNumericData,
-  setProcessedData,
   setQuantity,
   setOrderType,
   setOrderDirection,
 } from '../actions/dataActions';
+
+import { setProcessedData } from '../helper/setProcessedData';
 import {
   NUMERIC_DATA_LOADING_SUCCESS,
   QUANTITY_CHANGE,
   ORDER_TYPE_CHANGE,
   ORDER_DIRECTION_CHANGE,
-} from '../actions/stateTypes';
+} from '../actions/actionTypes';
 
 import { MergeSort } from '../helper/sorting';
 import { types } from '../helper/stringTypes';

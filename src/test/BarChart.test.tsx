@@ -1,37 +1,49 @@
 import * as React from 'react';
-import { screen, fireEvent, cleanup } from '@testing-library/react';
-import ReactDOM from 'react-dom';
-import { within } from '@testing-library/dom';
-import { UnconnectedBarChart } from '../components/BarChart';
-import { types } from '../helper/stringTypes';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import BarChart from '../components/BarChart';
 
-describe('Component: UnconnectedBarChart', () => {
-  const BarChartProps = {
-    allNumericData: [],
-    allAlphabeticData: [],
-    shownData: [],
-    orderType: types.numeric,
-    orderDirection: types.ascending,
-    quantity: 50,
-    getNumericData: jest.fn(),
-    setQuantity: jest.fn(),
-    setOrderType: jest.fn(),
-    setOrderDirection: jest.fn(),
-  };
+import reducer from '../reducers';
 
-  it('should handle quantity changes', async () => {
-    const root = document.createElement('div');
+describe('Component: BarChart', () => {
+  const store = createStore(reducer, {});
+  const { getByTestId, getByLabelText } = render(
+    <Provider store={store}>
+      <BarChart />
+    </Provider>
+  );
 
-    ReactDOM.render(<UnconnectedBarChart {...BarChartProps} />, root);
-    const { getByLabelText } = within(root);
+  it('should render the right quantity', async () => {
     fireEvent.mouseDown(getByLabelText('Quantity'));
+    fireEvent.click(screen.getByTestId('quantity-option-10'));
+    expect(getByTestId('graph_svg').getAttribute('width')).toEqual('600');
+    expect(
+      getByTestId('graph_svg').children[0].children[0].children.length
+    ).toEqual(10);
 
-    fireEvent.click(screen.getByText('50')); //test case when it is called with same number
-    expect(BarChartProps.setQuantity).toHaveBeenCalledTimes(0);
+    fireEvent.click(screen.getByTestId('quantity-option-50'));
+    expect(getByTestId('graph_svg').getAttribute('width')).toEqual('1800');
+    expect(
+      getByTestId('graph_svg').children[0].children[0].children.length
+    ).toEqual(50);
 
-    fireEvent.mouseDown(getByLabelText('Quantity'));
-
-    fireEvent.click(screen.getByText('10'));
-    expect(BarChartProps.setQuantity).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByTestId('quantity-option-100'));
+    expect(getByTestId('graph_svg').getAttribute('width')).toEqual('3600');
+    expect(
+      getByTestId('graph_svg').children[0].children[0].children.length
+    ).toEqual(100);
   });
+
+  // it('should render the right order', async () => {
+  //   fireEvent.mouseDown(getByLabelText('Order Type'));
+  //   fireEvent.click(screen.getByTestId('order-type-alphabetic'));
+
+  //   fireEvent.mouseDown(getByLabelText('Order By'));
+  //   fireEvent.click(screen.getByTestId('order-by-descending'));
+  //   expect(
+  //     getByTestId('graph_svg').children[0].children[1].children[1].children[1]
+  //       .textContent
+  //   ).toEqual('zro2');
+  // });
 });

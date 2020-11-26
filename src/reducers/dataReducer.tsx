@@ -4,21 +4,11 @@ import {
   QUANTITY_CHANGE,
   ORDER_TYPE_CHANGE,
   ORDER_DIRECTION_CHANGE,
-} from '../actions/stateTypes';
+} from '../actions/actionTypes';
 import { types } from '../helper/stringTypes';
-import { subArticle } from '../models/models';
+import { dataActionsTypes } from '../actions/actionTypes';
+import { InitState } from '../models/models';
 import { MergeSort } from '../helper/sorting';
-
-declare interface IAction {
-  type: string;
-  payload: any;
-}
-export interface InitState {
-  allNumericData: Array<subArticle>;
-  quantity: number;
-  orderDirection: string;
-  orderType: string;
-}
 
 const INITIAL_STATE = {
   allNumericData: [],
@@ -27,7 +17,7 @@ const INITIAL_STATE = {
   orderType: types.numeric,
 };
 
-export default (state = INITIAL_STATE, action: IAction): InitState => {
+export default (state = INITIAL_STATE, action: dataActionsTypes): InitState => {
   switch (action.type) {
     case NUMERIC_DATA_LOADING_SUCCESS:
       return {

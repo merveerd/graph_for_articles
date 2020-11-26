@@ -10,15 +10,13 @@ import {
   setOrderType,
   setOrderDirection,
 } from '../actions/dataActions';
-import { subArticle } from '../models/models';
+import { ArticleData } from '../models/models';
 import { styles } from '../styles/styles';
-//import Inputs from './Inputs';
 import OrderDirectionInput from './OrderDirectionInput';
 import OrderTypeInput from './OrderTypeInput';
 import QuantityInput from './QuantityInput';
 import { draw } from '../helper/draw';
 import { getShown, getAlphabetic } from '../reducers/dataReducer';
-//import { cpuUsage } from 'process';
 
 interface DispatchProps {
   getNumericData: () => void;
@@ -27,9 +25,9 @@ interface DispatchProps {
   setOrderDirection: (orderDirection: string) => void;
 }
 interface StateProps {
-  allNumericData: Array<subArticle>;
-  allAlphabeticData: Array<subArticle>;
-  shownData: Array<subArticle>;
+  allNumericData: ArticleData;
+  allAlphabeticData: ArticleData;
+  shownData: ArticleData;
   orderType: string;
   orderDirection: string;
   quantity: number;

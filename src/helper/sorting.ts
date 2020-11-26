@@ -1,16 +1,13 @@
-import { subArticle } from '../models/models';
+import { ArticleData } from '../models/models';
 import { types } from './stringTypes';
-export function MergeSort(
-  items: Array<subArticle>,
-  type: string
-): Array<subArticle> {
+export function MergeSort(items: ArticleData, type: string): ArticleData {
   if (type === types.numeric) {
     return divideForNumeric(items);
   }
   return divideForAlphabetic(items);
 }
 
-function divideForNumeric(items: Array<subArticle>) {
+function divideForNumeric(items: ArticleData) {
   var halfLength = Math.ceil(items.length / 2);
   var low = items.slice(0, halfLength);
   var high = items.slice(halfLength);
@@ -21,10 +18,7 @@ function divideForNumeric(items: Array<subArticle>) {
   return combineNumerically(low, high);
 }
 
-function combineNumerically(
-  low: Array<subArticle>,
-  high: Array<subArticle>
-): Array<subArticle> {
+function combineNumerically(low: ArticleData, high: ArticleData): ArticleData {
   var indexLow = 0;
   var indexHigh = 0;
   var lengthLow = low.length;
@@ -56,7 +50,7 @@ function combineNumerically(
   return combined;
 }
 
-function divideForAlphabetic(items: Array<subArticle>) {
+function divideForAlphabetic(items: ArticleData) {
   var halfLength = Math.ceil(items.length / 2);
   var low = items.slice(0, halfLength);
   var high = items.slice(halfLength);
@@ -67,9 +61,9 @@ function divideForAlphabetic(items: Array<subArticle>) {
   return combineAlphabetically(low, high);
 }
 function combineAlphabetically(
-  low: Array<subArticle>,
-  high: Array<subArticle>
-): Array<subArticle> {
+  low: ArticleData,
+  high: ArticleData
+): ArticleData {
   var indexLow = 0;
   var indexHigh = 0;
   var lengthLow = low.length;
