@@ -1,16 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
+import { StyledFormControl } from '../styles/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(4),
-    minWidth: 120,
-  },
-}));
 
 interface QuantityInputProps {
   quantityValue: number;
@@ -21,9 +13,8 @@ const QuantityInput = ({
   quantityValue,
   handleQuantity,
 }: QuantityInputProps) => {
-  const classes = useStyles();
   return (
-    <FormControl className={classes.formControl}>
+    <StyledFormControl>
       <InputLabel id="quantity-label">Quantity</InputLabel>
       <Select
         labelId="quantity-label"
@@ -40,7 +31,7 @@ const QuantityInput = ({
           100
         </MenuItem>
       </Select>
-    </FormControl>
+    </StyledFormControl>
   );
 };
 export default QuantityInput;

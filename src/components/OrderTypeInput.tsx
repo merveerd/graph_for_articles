@@ -1,16 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
+import { StyledFormControl } from '../styles/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { types } from '../helper/stringTypes';
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(4),
-    minWidth: 120,
-  },
-}));
 
 interface OrderTypeInputProps {
   changeOrderType: (event: any) => void;
@@ -20,9 +13,8 @@ const OrderTypeInput = ({
   orderTypeValue,
   changeOrderType,
 }: OrderTypeInputProps) => {
-  const classes = useStyles();
   return (
-    <FormControl className={classes.formControl}>
+    <StyledFormControl>
       <InputLabel id="order-type-label">Order Type</InputLabel>
       <Select
         labelId="order-type-label"
@@ -36,7 +28,7 @@ const OrderTypeInput = ({
           Alphabetic
         </MenuItem>
       </Select>
-    </FormControl>
+    </StyledFormControl>
   );
 };
 export default OrderTypeInput;
