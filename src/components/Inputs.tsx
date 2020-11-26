@@ -5,6 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { types } from '../helper/stringTypes';
+import { styles } from '../styles/styles';
 //can be seperated these two inputs
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,16 +32,7 @@ const Inputs = ({
 }: InputProps) => {
   const classes = useStyles();
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyItems: 'center',
-        position: 'fixed',
-        height: '10vh',
-      }}
-    >
+    <div>
       <FormControl className={classes.formControl}>
         <InputLabel id="quantity-label">Quantity</InputLabel>
         <Select

@@ -12,31 +12,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface OrderTypeInputProps {
-  changeOrderType: (event: any) => void;
-  orderTypeValue: string;
+interface OrderDirectionInputProps {
+  changeOrderDirection: (event: any) => void;
+  orderDirection: string;
 }
-const OrderTypeInput = ({
-  orderTypeValue,
-  changeOrderType,
-}: OrderTypeInputProps) => {
+const OrderDirectionInput = ({
+  orderDirection,
+  changeOrderDirection,
+}: OrderDirectionInputProps) => {
   const classes = useStyles();
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel id="order-type-label">Order Type</InputLabel>
+      <InputLabel id="order-by-label">Order By</InputLabel>
       <Select
-        labelId="order-type-label"
-        value={orderTypeValue}
-        onChange={changeOrderType}
+        labelId="order-by-label"
+        value={orderDirection}
+        onChange={changeOrderDirection}
       >
-        <MenuItem value={types.numeric} data-testid="order-type-numeric">
-          Numeric
+        <MenuItem value={types.ascending} data-testid="order-by-ascending">
+          Ascending
         </MenuItem>
-        <MenuItem value={types.alphabetic} data-testid="order-type-alphabetic">
-          Alphabetic
+        <MenuItem value={types.descending} data-testid="order-by-descending">
+          Descending
         </MenuItem>
       </Select>
     </FormControl>
   );
 };
-export default OrderTypeInput;
+export default OrderDirectionInput;

@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import {
   NUMERIC_DATA_LOADING_SUCCESS,
-  ALPHABETIC_DATA_LOADING_SUCCESS,
   QUANTITY_CHANGE,
   ORDER_TYPE_CHANGE,
   ORDER_DIRECTION_CHANGE,
@@ -62,9 +61,7 @@ export default (state = INITIAL_STATE, action: IAction): InitState => {
 // Selectors
 
 const getQuantity = (state: InitState) => state.quantity;
-const getOrderType = (state: InitState) => {
-  return state.orderType;
-};
+const getOrderType = (state: InitState) => state.orderType;
 const getOrderDirection = (state: InitState) => state.orderDirection;
 const getAllNumericData = (state: InitState) => state.allNumericData;
 
@@ -72,6 +69,7 @@ export const getAlphabetic = createSelector(
   [getAllNumericData, getOrderType],
   (allNumericData, orderType) => {
     if (orderType === types.alphabetic) {
+      //to not process when the page is initially loaded.
       return MergeSort(allNumericData, types.alphabetic);
     }
     return []; //to prevent returning undefined since slice method is used for chosendata
@@ -95,7 +93,6 @@ export const getShown = createSelector(
       orderDirection === types.ascending
         ? chosenData.slice(0, quantity)
         : chosenData.slice(-quantity).reverse();
-
     return shown;
   }
 );

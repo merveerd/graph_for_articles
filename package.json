@@ -9,9 +9,9 @@
     "@devexpress/dx-react-core": "^2.7.3",
     "@material-ui/core": "^4.11.0",
     "@reduxjs/toolkit": "^1.4.0",
-    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/cheerio": "^0.22.22",
     "@types/d3": "^6.2.0",
     "@types/d3-selection": "^2.0.0",
     "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -19,6 +19,7 @@
     "@types/node": "^12.0.0",
     "@types/react-addons-perf": "^0.14.18",
     "@types/react-redux": "^7.1.11",
+    "@types/redux-mock-store": "^1.0.2",
     "d3": "^6.2.0",
     "devextreme": "20.2.3",
     "devextreme-react": "20.2.3",
@@ -57,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.6",
     "@types/babel__core": "^7.1.12",
     "@types/enzyme": "^3.10.8",
     "@types/react": "^16.14.0",

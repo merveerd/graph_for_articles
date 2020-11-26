@@ -1,57 +1,47 @@
-import * as actions from '../actions/dataActions';
-import { types } from '../helper/stringTypes';
-import { subArticle } from '../models/models';
+import {
+  getNumericData,
+  setProcessedData,
+  setQuantity,
+  setOrderType,
+  setOrderDirection,
+} from '../actions/dataActions';
 import {
   NUMERIC_DATA_LOADING_SUCCESS,
-  ALPHABETIC_DATA_LOADING_SUCCESS,
-  SHOWN_DATA_LOADING,
+  QUANTITY_CHANGE,
+  ORDER_TYPE_CHANGE,
+  ORDER_DIRECTION_CHANGE,
 } from '../actions/stateTypes';
 
-import { render, fireEvent, within } from '@testing-library/react';
-describe('actions', () => {
-  it('should create an action to get data shown on the graph', () => {
-    const data = [
-      {
-        '2009': 21,
-        '2010': 39,
-        '2011': 58,
-        '2012': 55,
-        '2013': 112,
-        '2014': 54,
-        name: 'ion',
-        frequency: 339,
-      },
-      {
-        '2009': 38,
-        '2010': 38,
-        '2011': 64,
-        '2012': 86,
-        '2013': 67,
-        '2014': 60,
-        name: 'carbon',
-        frequency: 353,
-      },
+import { MergeSort } from '../helper/sorting';
+import { types } from '../helper/stringTypes';
 
-      {
-        '2009': 13,
-        '2010': 27,
-        '2011': 43,
-        '2012': 87,
-        '2013': 90,
-        '2014': 68,
-        name: 'rate',
-        frequency: 328,
-      },
-    ];
-    const orderDirection = 'Ascending';
-    // const shown =  orderDirection === types.ascending
-    // ? data.slice(0, 10)
-    // : data.slice(-10).reverse();
+describe('DataActions', () => {
+  it('creates numeric sorted data', () => {
+    const numericData = getNumericData();
+    expect(numericData).toEqual({
+      type: NUMERIC_DATA_LOADING_SUCCESS,
+      payload: MergeSort(setProcessedData(), types.numeric),
+    });
+  });
 
-    // const expectedAction = {
-    //   type: SHOWN_DATA_LOADING_SUCCESS,
-    //   payload:shown
-    // }
-    //expect(actions.getShownData(data: subArticle[], orderDirection: string, quantity: number)).toEqual(expectedAction)
+  it('sets quantity for bar graph', () => {
+    const quantity = setQuantity(50);
+    expect(quantity).toEqual({ type: QUANTITY_CHANGE, payload: 50 });
+  });
+
+  it('sets orderDirection for bar graph', () => {
+    const orderDirection = setOrderDirection(types.ascending);
+    expect(orderDirection).toEqual({
+      type: ORDER_DIRECTION_CHANGE,
+      payload: types.ascending,
+    });
+  });
+
+  it('sets quantity for bar graph', () => {
+    const orderType = setOrderType(types.numeric);
+    expect(orderType).toEqual({
+      type: ORDER_TYPE_CHANGE,
+      payload: types.numeric,
+    });
   });
 });

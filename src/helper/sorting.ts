@@ -5,10 +5,8 @@ export function MergeSort(
   type: string
 ): Array<subArticle> {
   if (type === types.numeric) {
-    console.log('numeric sort');
     return divideForNumeric(items);
   }
-  console.log('alphabetic sort');
   return divideForAlphabetic(items);
 }
 
