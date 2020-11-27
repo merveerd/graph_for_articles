@@ -4,23 +4,51 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
+    container:
+      image: node
+    # strategy:
+    #   matrix:
+    #     node-version: [12.x]
+
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      - name: Install & Tests
+        run: |
+          npm install
+          npm test
+  cd:
+    runs-on: ubuntu-latest
+    needs: ci
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build
+        run: docker build -t article_graph .
+      - name: Tags
+       run: |
+         docker tag article_graph ${{ secrets.DOCKER_HUB_USERNAME }}/article_graph:${{ github.sha }}
+         docker tag article_graph ${{ secrets.DOCKER_HUB_USERNAME }}/article_graph:latest
+     - name: Push
+       run: |
+         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/article_graph:${{ github.sha }}
+         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/article_graph:latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Install Packages
-        run: npm install
+        run: npm ci
+      - name: Test app
+        run: npm test
       - name: Build page
         run: npm run build
       - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: merveerd/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.DOCKER_HUB_TOKEN }}
+          branch: gh-pages
           publish_dir: ./build
