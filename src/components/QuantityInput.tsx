@@ -13,9 +13,12 @@ const QuantityInput = ({
 }: QuantityInputProps) => {
   return (
     <StyledFormControl>
-      <InputLabel id="quantity-label">Quantity</InputLabel>
+      <InputLabel data-testid="quantity-label" id="quantity-label">
+        Quantity
+      </InputLabel>
       <Select
         labelId="quantity-label"
+        data-testid="quantity-select"
         value={quantityValue}
         onChange={handleQuantity}
       >
